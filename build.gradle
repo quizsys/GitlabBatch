@@ -18,7 +18,6 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.apache.httpcomponents:httpclient'
-
 }
 
 test {
