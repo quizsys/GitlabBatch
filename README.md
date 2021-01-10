@@ -79,20 +79,20 @@
 下記のようなファイル構成になればOK
 ```
 SpringSampleBatch
-├─build.gradle
+├─build.gradle                                               ★ビルドの内容を記載
 └─src
     ├─main
     │  ├─java
     │  │  └─com
     │  │      └─example
     │  │          └─demo
-    │  │              ├─BulletinBoardDao.java
-    │  │              ├─BulletinBoardDto.java
-    │  │              └─SpringSampleBatchApplication.java
+    │  │              ├─BulletinBoardDao.java                ★DAO（モデル）
+    │  │              ├─BulletinBoardDto.java                ★DTO（DBとの値のやり取りをする）
+    │  │              └─SpringSampleBatchApplication.java    ★実行ファイル
     │  │
     │  └─resources
-    │      ├─application.properties
-    │      └─log4j2.xml
+    │      ├─application.properties                          ★DB接続定義ファイル
+    │      └─log4j2.xml                                      ★ログ出力定義ファイル
     │
     └─test
 ```
