@@ -185,10 +185,10 @@ public class SpringSampleBatchApplication implements CommandLineRunner {
 # 実行手順
 * warの時と同様に「実行」 > 「Spring Bootアプリケーション」でOK
 　
-* 実行後に下記を確認する。
-　①eclipseのコンソールに`START: バッチ処理を開始します`と`END: バッチ処理が完了しました`と出力されていること
-　②Cドライブ直下の`/springsample/log/springsample-batch.log`に上記同様のログが出力されていること。（自分で設定したログのファイル名に書き換える）
-詳しくはこちら→[参考サイト](https://qiita.com/misskabu/items/9f0402554d511bf4b35d)
+* 実行後に下記を確認する。  
+　①eclipseのコンソールに`START: バッチ処理を開始します`と`END: バッチ処理が完了しました`と出力されていること  
+　②Cドライブ直下の`/springsample/log/springsample-batch.log`に上記同様のログが出力されていること。（自分で設定したログのファイル名に書き換える）  
+詳しくはこちら→[参考サイト](https://qiita.com/misskabu/items/9f0402554d511bf4b35d)  
 
 
 
@@ -198,4 +198,15 @@ public class SpringSampleBatchApplication implements CommandLineRunner {
 ワークスペースを選択し、「SpringSampleBatch」のプロジェクトを選択し、右下の「実行」ボタンを押下する。
 
 
-* initializationErrorが出る場合は、「SpringSampleBatchApplicationTests.java」の中身をすべてコメントアウトする
+* initializationErrorが出る場合は、「SpringSampleBatchApplicationTests.java」の中身をすべてコメントアウトする  
+
+* 実行後に、プロジェクトを右クリック→Windowsエクスプローラー  を選択し、プロジェクトのフォルダが表示し、build/libsの下にjarファイルが作成されていればOK。
+
+# jarファイルの実行方法
+
+コマンドラインから下記のようにコマンドを実行する。
+```
+java -jar SpringSampleBatch.jar  
+```
+ログが出ていればOK
+
