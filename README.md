@@ -5,6 +5,17 @@
 **適時、自分のプロジェクト名に読み替えて、実施してください。**
 
 
+## 目次
+
+* [プロジェクトの作成](#プロジェクトの作成)
+* [log4j（ログを出力する仕組み）の設定](#log4jログを出力する仕組みの設定)
+* [daoとdtoとapplication.propertiesを作成](#daoとdtoとapplicationpropertiesを作成)
+* [SpringSampleBatchApplicationのクラスを修正](#springsamplebatchapplicationのクラスを修正)
+* [実行手順](#実行手順)
+* [Gitへの登録](#gitへの登録)
+* [jarのビルド](#jarのビルド)
+* [jarファイルの実行方法](#jarファイルの実行方法)
+
 ## プロジェクトの作成
 
 * 大まかな手順は 前回と同じ。  
@@ -79,7 +90,7 @@
 [参考サイト2](https://pukiwiki.codereign.org/index.php?SoftwareEngineering%2FJava%2FLogging%2FApacheLog4j2%2FAppenders)
 
 
-## DaoとDto、application.propertyを作成
+## daoとdtoとapplicationpropertiesを作成
 * 他プロジェクトで作成したものを、コピー&ペーストして終わり（使いまわしして省エネしましょう！）  
 下記のようなファイル構成になればOK
 ```
@@ -168,7 +179,7 @@ public class SpringSampleBatchApplication implements CommandLineRunner {
 ```
 
 
-# 実行手順
+## 実行手順
 * warの時と同様に「実行」 > 「Spring Bootアプリケーション」でOK
 　
 * 実行後に下記を確認する。  
@@ -177,7 +188,7 @@ public class SpringSampleBatchApplication implements CommandLineRunner {
 詳しくはこちら→[参考サイト](https://qiita.com/misskabu/items/9f0402554d511bf4b35d)  
 
 
-# Gitへの登録
+## Gitへの登録
 
 * プロジェクトを右クリック→Windowsエクスプローラー  
 　プロジェクトのフォルダが表示される
@@ -195,7 +206,7 @@ public class SpringSampleBatchApplication implements CommandLineRunner {
 
 
 
-# jarのビルド
+## jarのビルド
 * プロジェクト名を右クリック > 実行 > 実行の構成 > Gradle Taskを選択肢、右クリック > 新規構成（W） を選択。  
 「追加」を押下し、Gradleタスクの入力欄の「task」を「build」に書き換える。  
 ワークスペースを選択し、「SpringSampleBatch」のプロジェクトを選択し、右下の「実行」ボタンを押下する。
