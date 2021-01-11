@@ -18,6 +18,12 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.apache.httpcomponents:httpclient'
+	compile 'com.fasterxml.jackson.core:jackson-databind'
+
+	testCompile 'junit:junit:4.12'
+	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.5'
+	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.5'
+
 }
 
 test {

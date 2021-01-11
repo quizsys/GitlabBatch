@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+  <appenders>
+    <Console name="console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d %-5p [%t] - %m (%C.java:%L)%n"/>
+    </Console>
+  		<RollingFile name="file" fileName="/gitlab-batch/log/gitlab-batch.log"
+			filePattern="/gitlab-batch/log/gitlab-batch.%d{yyyyMMdd}.log">
+			<PatternLayout pattern="%d %-5p [%t] - %m (%C.java:%L)%n"/>
+			<Policies>
+				<CronTriggeringPolicy schedule="0 0 0 * * ?" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+		</RollingFile>
+  </appenders>
+
+  <loggers>
+    <Logger name="org.example" level="info" additivity="false">
+      <appender-ref level="info" ref="console"/>
+    </Logger>
+    <root level="info">
+      <appender-ref ref="console"/>
+      <appender-ref ref="file"/>
+    </root>
+  </loggers>
+</configuration>
