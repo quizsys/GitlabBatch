@@ -168,6 +168,14 @@ public class SpringSampleBatchApplication implements CommandLineRunner {
 ```
 
 
+# 実行手順
+* warの時と同様に「実行」 > 「Spring Bootアプリケーション」でOK
+　
+* 実行後に下記を確認する。  
+　①eclipseのコンソールに`START: バッチ処理を開始します`と`END: バッチ処理が完了しました`と出力されていること  
+　②Cドライブ直下の`/springsample/log/springsample-batch.log`に上記同様のログが出力されていること。（自分で設定したログのファイル名に書き換える）  
+詳しくはこちら→[参考サイト](https://qiita.com/misskabu/items/9f0402554d511bf4b35d)  
+
 
 # Gitへの登録
 
@@ -184,16 +192,6 @@ public class SpringSampleBatchApplication implements CommandLineRunner {
 　何もないところで、右クリック >インポート > Gradle > 既存のGradleプロジェクト で次へ  
 　参照を押下し、先ほどGitに登録したプロジェクトフォルダを選択し、完了を押下。  
 　エラーが出ずに、eclipse上に元のプロジェクトフォルダができていればOK  
-
-
-
-# 実行手順
-* warの時と同様に「実行」 > 「Spring Bootアプリケーション」でOK
-　
-* 実行後に下記を確認する。  
-　①eclipseのコンソールに`START: バッチ処理を開始します`と`END: バッチ処理が完了しました`と出力されていること  
-　②Cドライブ直下の`/springsample/log/springsample-batch.log`に上記同様のログが出力されていること。（自分で設定したログのファイル名に書き換える）  
-詳しくはこちら→[参考サイト](https://qiita.com/misskabu/items/9f0402554d511bf4b35d)  
 
 
 
