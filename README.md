@@ -75,24 +75,24 @@
 
 
 ## DaoとDto、application.propertyを作成
-* 他プロジェクトで作成したものがあれば、コピー&ペーストして終わり（使いまわしして省エネしましょう！）  
+* 他プロジェクトで作成したものを、コピー&ペーストして終わり（使いまわしして省エネしましょう！）  
 下記のようなファイル構成になればOK
 ```
 SpringSampleBatch
-├─build.gradle                                               ★ビルドの内容を記載
+├─build.gradle                                               ★ビルドの内容を記載（編集）
 └─src
     ├─main
     │  ├─java
     │  │  └─com
     │  │      └─example
     │  │          └─demo
-    │  │              ├─BulletinBoardDao.java                ★DAO（モデル）
-    │  │              ├─BulletinBoardDto.java                ★DTO（DBとの値のやり取りをする）
-    │  │              └─SpringSampleBatchApplication.java    ★実行ファイル
+    │  │              ├─BulletinBoardDao.java                ★DAO（モデル）（コピペ）
+    │  │              ├─BulletinBoardDto.java                ★DTO（DBとの値のやり取りをする）（コピペ）
+    │  │              └─SpringSampleBatchApplication.java    ★実行ファイル（編集）
     │  │
     │  └─resources
-    │      ├─application.properties                          ★DB接続定義ファイル
-    │      └─log4j2.xml                                      ★ログ出力定義ファイル
+    │      ├─application.properties                          ★DB接続定義ファイル（コピペ）
+    │      └─log4j2.xml                                      ★ログ出力定義ファイル（新規作成）
     │
     └─test
 ```
