@@ -86,8 +86,8 @@ SpringSampleBatch
     │  │  └─com
     │  │      └─example
     │  │          └─demo
-    │  │              ├─BulletinBoardDao.java                ★DAO（モデル）（コピペ）
-    │  │              ├─BulletinBoardDto.java                ★DTO（DBとの値のやり取りをする）（コピペ）
+    │  │              ├─BulletinBoardDao.java                ★DAO（コピペ）
+    │  │              ├─BulletinBoardDto.java                ★DTO（コピペ）
     │  │              └─SpringSampleBatchApplication.java    ★実行ファイル（編集）
     │  │
     │  └─resources
