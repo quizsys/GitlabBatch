@@ -150,7 +150,7 @@ public class SpringSampleBatchApplication implements CommandLineRunner {
     }
 ```
 
-上記4点が終わった後に、下記のようになっていればOK（「××を型に解決できません」と出ていたら、大抵importがうまくいってないので、下記を参考にimport文を見直す）
+上記4点が終わった後に、下記のようになっていればOK
 ```SpringSampleBatchApplication.java
 package com.example.demo;
 
@@ -186,7 +186,7 @@ public class SpringSampleBatchApplication implements CommandLineRunner {
 }
 
 ```
-
+* 「××を型に解決できません」と出ていたら、大抵importがうまくいってないので、下記を参考にimport文を見直す
 
 ## eclipse上での実行手順
 * 前回と同様に「実行」 > 「Spring Bootアプリケーション」でOK
