@@ -42,7 +42,7 @@
 ## log4j（ログを出力する仕組み）の設定
 
 * build.gradleに下記を追加
-```
+```build.gradle
 	testCompile 'junit:junit:4.12'
 	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.5'
 	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.5'
@@ -54,7 +54,7 @@
 パッケージエクスプローラーから「src/main/resources」を選択し、右クリック > 新規 > ファイル を選択する。
 ファイル名に「log4j2.xml」と入力し、「完了」を押下  
 ファイル（log4j2.xml）に下記のようにログの設定を記載する。
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration status="OFF">
   <appenders>
@@ -121,24 +121,24 @@ SpringSampleBatch
 * CommandLineRunnerを継承
 クラス名の後ろに`implements CommandLineRunner`を追加して継承する。
 例）
-```
+```java
 public class SpringSampleBatchApplication implements CommandLineRunner {
 ```
 
 * Daoを実装する
-```
+```java
     @Autowired
     private BulletinBoardDao bulletinBoardDao;
 ```
 
 
 * ロガー（log4j）を実装する（`SpringSampleBatchApplication`は適時クラス名に置き換える）
-```
+```java
     private static final Logger LOGGER = LogManager.getLogger(SpringSampleBatchApplication.class);
 ```
 
 * runメソッドを作成する（このメソッド内に実行したい処理を書いていく）
-```
+```java
     @Override
     public void run(String... strings) throws Exception {
         
@@ -151,7 +151,16 @@ public class SpringSampleBatchApplication implements CommandLineRunner {
 ```
 
 上記4点が終わった後に、下記のようになっていればOK
-```
+```SpringSampleBatchApplication.java
+package com.example.demo;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 @SpringBootApplication
 public class SpringSampleBatchApplication implements CommandLineRunner {
 
