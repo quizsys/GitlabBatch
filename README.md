@@ -11,7 +11,7 @@
 * [log4j（ログを出力する仕組み）の設定](#log4jログを出力する仕組みの設定)
 * [daoとdtoとapplication.propertiesを作成](#daoとdtoとapplicationpropertiesを作成)
 * [SpringSampleBatchApplicationのクラスを修正](#springsamplebatchapplicationのクラスを修正)
-* [実行手順](#実行手順)
+* [eclipse上での実行手順](#eclipse上での実行手順)
 * [Gitへの登録](#gitへの登録)
 * [jarのビルド](#jarのビルド)
 * [jarファイルの実行方法](#jarファイルの実行方法)
@@ -179,8 +179,8 @@ public class SpringSampleBatchApplication implements CommandLineRunner {
 ```
 
 
-## 実行手順
-* warの時と同様に「実行」 > 「Spring Bootアプリケーション」でOK
+## eclipse上での実行手順
+* 前回と同様に「実行」 > 「Spring Bootアプリケーション」でOK
 　
 * 実行後に下記を確認する。  
 　①eclipseのコンソールに`START: バッチ処理を開始します`と`END: バッチ処理が完了しました`と出力されていること  
