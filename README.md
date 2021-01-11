@@ -204,7 +204,7 @@ public class SpringSampleBatchApplication implements CommandLineRunner {
 
 # jarファイルの実行方法
 
-コマンドラインから下記のようにコマンドを実行する。
+jarファイルのあるフォルダ内で、コマンドラインから下記のようにコマンドを実行する。
 ```
 java -jar SpringSampleBatch.jar  
 ```
