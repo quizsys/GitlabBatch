@@ -1,5 +1,10 @@
 # バッチプロジェクトの作成手順
 
+### 注意点
+**この手順ではプロジェクト名を`SpringSampleBatch`、ログの出力先を`/springsample/log/springsample-batch.log`としています。**  
+**適時、自分のプロジェクト名に読み替えて、実施するように気をつけてください。**
+
+
 ## プロジェクトの作成
 
 * 大まかな手順は 前回と同じ。  
@@ -98,7 +103,7 @@ SpringSampleBatch
 ```
 
 
-## BulletinBoardBatchApplicationのクラスを修正
+## SpringSampleBatchApplicationのクラスを修正
 コマンドラインから実行できるように`CommandLineRunner`を継承する
 
 
