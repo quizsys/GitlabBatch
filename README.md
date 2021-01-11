@@ -209,4 +209,8 @@ jarファイルのあるフォルダ内で、コマンドラインから下記�
 java -jar SpringSampleBatch.jar  
 ```
 ログが出ていればOK
+```
+20yy-MM-dd 09:04:32,125 INFO  [restartedMain] - START: バッチ処理を開始します (com.example.demo.SpringSampleBatchApplication.java:32)
+20yy-MM-dd 09:04:32,125 INFO  [restartedMain] - END: バッチ処理が完了しました (com.example.demo.SpringSampleBatchApplication.java:55)
+```
 
