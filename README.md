@@ -121,7 +121,7 @@ public class SpringSampleBatchApplication implements CommandLineRunner {
 ```
 
 
-* ロガー（log4j）を実装する
+* ロガー（log4j）を実装する（`SpringSampleBatchApplication`は適時クラス名に置き換える）
 ```
     private static final Logger LOGGER = LogManager.getLogger(SpringSampleBatchApplication.class);
 ```
