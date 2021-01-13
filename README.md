@@ -1,326 +1,146 @@
-//グローバル変数の宣言
-var burnDownChart
-//
-// /**
-// * APIへのAjax通信用のメソッド
-// * @param method : GET, POST
-// * @param url : リクエスト先のURL
-// * @param request : requestのjson
-// * @param successFunc : リクエスト成功時に起動するfunction
-// * @returns
-// */
-// function sendAjaxRequestToApi(method, url, request, successFunc){
-//
-//     //ajaxでservletにリクエストを送信
-//     $.ajax({
-//        type    : method,   //GET / POST
-//        url     : API_URL + url,      //送信先のServlet URL（適当に変えて下さい）
-//        data    : request,  //リクエストJSON
-//        async   : true      //true:非同期(デフォルト), false:同期
-//     })
-//     // 通信成功時
-//     .done( function(data) {
-//       console.log(url);
-//       successFunc(data)
-//     })
-//     // 通信失敗時
-// 		 .fail( function(data) {
-//         alert("リクエスト時になんらかのエラーが発生しました：");
-// 		 });
-// }
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gitlab tools</title>
+  <meta charset="UTF-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.0/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+  <script src="config.js"></script>
+  <script src="common.js"></script>
+  <script src="main.js"></script>
+  <script src="main-chart.js"></script>
+</head>
+<body>
 
 
-/**
-* 処理開始
-*/
-function getInfoBurnDownChart(){
+  <h1>ISSUEを集計</h1>
+  <select id="milestone"></select>
+  <button class="btn btn-primary" id="get-info-btn" onclick="getInfo()">送信</button>
+  <div id="update-date-time"></div>
 
-		//入力チェック
-		if(!labelIssueList){
-      alert("マイルストーンが選択されていません\n「ISSUEを集計」の送信ボタンを押してください")
-			return;
-		}
+  <br>
+  <br>
 
-    //初期化
-    if(burnDownChart){
-      burnDownChart.destroy()
-    }
-
-		//取得処理
-		getBurnDownInfo()
-}
-
-
-
-/**
-* バーンダウン情報を取得
-*/
-function getBurnDownInfo(){
-
-    var milestone = selectMilestone;
-    var label = document.getElementById("select-label-chart").value;
-
-    var successFunc = dataCreae
-		var method = "GET";
-		var url = "/burndown";
-		var request = "milestone=" + encodeURIComponent(milestone) + "&label=" + encodeURIComponent(label)
-		sendAjaxRequestToApi(method, url, request, successFunc)
-
-}
+	<table class="table table-striped">
+		<thead>
+		  <tr>
+		  	<th>名前</th>
+		  	<th>ISSUEの数</th>
+		  	<th>estimate(h)</th>
+		  	<th>spend(h)</th>
+		  	<th>spendMR(h)</th>
+		  </tr>
+		</thead>
+		<tbody id="result">
+		</tbody>
+	</table>
 
 
-/**
-* グラフ表示用のデータを作成する
-*/
-function dataCreae(data){
+  <br>
 
-  var todayDate = dateToStr(new Date());
-  var label = document.getElementById("select-label-chart").value;
-  var milestoneStr = selectMilestone;
+  <h4>ラベル別集計</h4>
+    <input id="label-name" placeholder="ラベル名でフィルター" onchange="changeLabelName()"></input>
+    <input type="checkbox" id="graph-display-flg" onchange="changeLabelName()" />グラフ表示
+	<table id="label-table" class="table table-striped">
+		<thead>
+		  <tr>
+		  	<th>ラベル名</th>
+		  	<th>ISSUEの数</th>
+		  	<th>estimate(h)</th>
+		  	<th>spend(h)</th>
+		  	<th>spendMR(h)</th>
+		  </tr>
+		</thead>
+		<tbody id="result-by-tags">
+		</tbody>
+	</table>
+  <canvas id="label-chart" style="height: 50px"></canvas>
 
-  //日付のリストを作成
-  var dateList = []
-  var milestone =  searchElementSrtFromArray(milestoneList, "title", milestoneStr)
-  var startDateStr = milestone.start_date
-  var dueDateStr = milestone.due_date
-  var dateRange = dateDiff(startDateStr, dueDateStr) + 1　//初日を含むため+1する
-  var startDate = strToDate(startDateStr)
+  <!-- <br> -->
+  <h4>一覧をcsvダウンロード</h4>
+  <a id="download" class="btn btn-info" href="#" download="test.csv" onclick="csvDownload()">ダウンロード</a>
 
-  var tmpDate = startDate;
-  for(var i = 0; i< dateRange; i++){
 
-    var str = dateToStr(tmpDate)
-    dateList.push(str)
-    tmpDate.setDate(tmpDate.getDate() + 1)
 
+  <br>
+  <br>
+  <hr>
+
+  <h1>ISSUEを作成</h1>
+  <h4>継続ISSUEを作成</h4>
+  <select id="issue"></select>
+  <button class="btn btn-success" onclick="getIssueContinue()">作成</button><br />
+  <input id="search-issue-name" placeholder="名前でフィルター" onchange="changeSearchIssueName()"></input>
+  <div id="createIssueResultContinue" style="color:red"></div>
+
+	<br>
+	<br>
+
+  <h4>テンプレートから作成</h4>
+  <table class="table" border="1">
+    <tbody>
+      <tr>
+        <td class="table-secondary">①プロジェクトを選択</td>
+        <td>
+          <select id="select-project" onchange="getTemplateList()"></select>
+        </td>
+      </tr>
+      <tr>
+        <td class="table-secondary">②テンプレートを選択</td>
+        <td>
+          <select id="select-template"></select><br />
+          <input type="checkbox" id="global-template-flg" onchange="getTemplateList()" />グローバルテンプレートを使用
+        </td>
+      </tr>
+      <tr>
+        <td class="table-secondary">③マイルストーンを選択</td>
+        <td>
+          <select id="select-milestone"></select>
+        </td>
+      </tr>
+      <tr>
+        <td class="table-secondary">④ラベルを選択<br>（Ctrl押しながらで複数選択可）</td>
+        <td>
+          <select id="select-label" multiple></select>
+        </td>
+      </tr>
+      <tr>
+        <td class="table-secondary">⑤ISSUEの名前を入力</td>
+        <td>
+          <input type="text" id="issue-name" placeholder="ISSUEの名前を入力してください" style="width:50vw"/>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button class="btn btn-success" onclick="getTemplate()">作成</button>
+  <div id="createIssueResult" style="color:red"></div>
+
+  <br>
+  <br>
+  <hr>
+  <h1>チャートを表示</h1>
+
+  <h4>バーンダウンチャートを表示</h4>
+
+  <select id="select-label-chart"></select>
+  <button class="btn btn-primary" onclick="getInfoBurnDownChart()">表示</button><br />
+  <canvas id="burnDownChart"></canvas>
+
+
+
+  <ul>
+    <li><a href="diagram/" target="_blank">累積フローダイアグラムを表示</a></li>
+  </ul>
+
+</body>
+
+<script>
+  window.onload = function() {
+    getProjectList()
+    getMilestoneList()
   }
+</script>
 
-
-  //取得データに最新のデータをマージ
-  var d = labelIssueList[label]
-  var todayData = {
-
-    milestone: milestone.title,
-    allIssueCount: d.issue_count,
-    compIssueCount: d.comp_issue_count,
-    date: todayDate,
-    label: d.name,
-    timeEstimate: d.time_estimate,
-    totalTimeSpent: d.total_time_spent,
-    totalTimeSpentMergeRequest:0
-  }
-  data.push(todayData)
-  // console.log(data)
-
-  //グラフ用のデータを準備
-  var labels = []
-  var compData = []
-  var allData = []
-  var compEstimate = []
-
-  var initEstimateTime = 0
-  var startDateData = searchElementSrtFromArray(data, "date", startDateStr);
-
-  // 初回日にデータがある場合（初回日より後にラベルを追加した場合はデータがない）
-  if(startDateData != null){
-    initEstimateTime = round(searchElementSrtFromArray(data, "date", startDateStr).timeEstimate /3600, 2)
-  } else {
-    console.log("★★★初日にデータがありません。後日ラベルが追加された可能性があります。★★★")
-  }
-
-  //見積もり時間が0でない場合
-  if(initEstimateTime != 0){
-    //初期データを投入
-    labels.push("見積当初")
-    compData.push(0)
-    allData.push(initEstimateTime)
-    compEstimate.push(initEstimateTime)
-  }
-
-  // 理想線のデータ作成
-  var estimateTime = initEstimateTime
-  var slope = estimateTime / dateList.length
-
-  // 日付ごとにデータをマッピングしていく
-  for(var i in dateList){
-
-    // 日付に対応するデータを取得
-    var d = searchElementSrtFromArray(data, "date", dateList[i])
-
-    labels.push(dateList[i])
-
-    if(d != null){
-      compData.push(100 - round(100 * ((d.allIssueCount - d.compIssueCount) / d.allIssueCount), 0) )
-      allData.push(round((d.timeEstimate - d.totalTimeSpent) / 3600, 2) )
-    }
-
-    if(initEstimateTime != 0){
-      //理想線のデータを追加
-      estimateTime -= slope
-      compEstimate.push(round(estimateTime, 0))
-    }
-  }
-
-  console.log(labels)
-  console.log(compData)
-  console.log(allData)
-  console.log(compEstimate)
-
-  // グラフを描画
-  chartCreateBurnDown(labels, compData, allData, compEstimate)
-
-}
-
-
-/*
-* バーンダウンチャートを作成
-*/
-function chartCreateBurnDown(labels, compData, allData, compEstimate){
-
-	//グラフ作成処理
-	var ctx = document.getElementById("burnDownChart");
-	burnDownChart = new Chart(ctx, {
-		type: 'bar',
-		data: {
-			labels: labels,
-			datasets: [
-				{
-					label: '残作業量（実績）',
-					data: allData,
-					borderColor: "rgba(0,0,255,1)",
-					backgroundColor: "rgba(0,0,0,0)",
-					lineTension:0, //ベジェ曲線の張り具合。 0（ゼロ）を指定すると直線になる,
-          yAxisID: "y-axis-1", // 追加
-          type: 'line' // 追加
-				},
-				{
-					label: '残作業量（理想）',
-					data: compEstimate,
-					borderColor: "gray",
-					backgroundColor: "rgba(0,0,0,0)",
-					lineTension:0, //ベジェ曲線の張り具合。 0（ゼロ）を指定すると直線になる
-          yAxisID: "y-axis-1", // 追加
-          type: 'line' // 追加
-
-				},
-				{
-					label: 'ISSUE完了率',
-					data: compData,
-          backgroundColor: "rgba(255,150,100,0.5)",
-          borderColor:"rgba(255,0,0,0.8)",
-          yAxisID: "y-axis-2" // 追加
-				}
-			],
-		},
-		options: optionBurnDown
-	});
-}
-
-
-// グラフのオプション
-var optionBurnDown = {
-	title: {
-		display: true,
-		text: 'バーンダウンチャート',
-		fontSize: 28,
-    responsive: true,
-	},
-	scales: {                          // 軸設定
-			xAxes: [                           // Ｘ軸設定
-					{
-							scaleLabel: {                 // 軸ラベル
-									display: true,                // 表示設定
-									labelString: '日付',    // ラベル
-									fontSize: FONT_SIZE                   // フォントサイズ
-							}
-					}
-			],
-			yAxes: [                           // Ｙ軸設定
-					{
-            id: "y-axis-1",   // Y軸のID
-            position: "left", // どちら側に表示される軸か？
-						scaleLabel: {                  // 軸ラベル
-								display: true,                 // 表示の有無
-								labelString: '残作業量（時間）',     // ラベル
-								fontSize: FONT_SIZE                   // フォントサイズ
-						},
-            ticks: {
-              min: 0,             // 0から始める
-            }
-          },
-          {
-            id: "y-axis-2",   // Y軸のID
-            position: "right", // どちら側に表示される軸か？
-						scaleLabel: {                  // 軸ラベル
-								display: true,                 // 表示の有無
-								labelString: 'ISSUE完了率（%）',     // ラベル
-								fontSize: FONT_SIZE                   // フォントサイズ
-						},
-            ticks: {
-                // fontColor: "black",
-                min: 0,             // 0から始める
-                max: 100,                      // 最大値100
-                autoSkip: true,                // 幅を小さくした場合に自動で表示数を減らす
-
-              }
-					}
-			]
-	}
-}
-
-// 
-// /***********************************************************
-// * 共通処理
-// *************************************************************/
-//
-// /**
-// * オブジェクトの配列から、キーが指定した値をオブジェクトを返却する
-// */
-// function searchElementSrtFromArray(array, key, searchStr){
-//
-//   var ret = null;
-//   for(var i in array){
-//       if(array[i][key] == searchStr){
-//         ret = array[i];
-//         break;
-//       }
-//   }
-//   return ret;
-// }
-//
-//
-// /**
-// * 日付の差分を計算
-// * 例) 2020-01-01 と 2020-01-05 の差分 => 4
-// */
-// function dateDiff(dateStr1, dateStr2){
-//
-// 	var dateStr1Arr = dateStr1.split("-")
-// 	var dateStr2Arr = dateStr2.split("-")
-//
-// 	var d1 = new Date(dateStr1Arr[0], dateStr1Arr[1]-1,dateStr1Arr[2])
-// 	var d2 = new Date(dateStr2Arr[0], dateStr2Arr[1]-1,dateStr2Arr[2])
-// 	return ((d2 - d1) / 86400000);
-//
-// }
-//
-//
-// /**
-// * 日付文字列をDate型で返す
-// */
-// function strToDate(dateStr){
-//   var dateStrArr = dateStr.split("-")
-//   return new Date(dateStrArr[0], dateStrArr[1]-1,dateStrArr[2])
-//
-// }
-//
-//
-// /**
-// * Date型オブジェクトを日付文字列（yyyy-MM-dd）で返す
-// */
-// function dateToStr(date){
-//   return date.getFullYear() + "-" + ("00" + (date.getMonth() + 1)).slice(-2) + "-" + ("00" + date.getDate()).slice(-2)
-// }
-
-
-console.log("read completed main-chart")
+</html>
