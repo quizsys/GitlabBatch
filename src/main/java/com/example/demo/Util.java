@@ -69,8 +69,8 @@ public class Util {
 	 */
 	public String jsonToMilestoneDate(String json) throws JsonMappingException, JsonProcessingException {
 
-        LocalDate today = LocalDate.of(2021,1,3);
-//        LocalDate today = LocalDate.now();
+//        LocalDate today = LocalDate.of(2021,1,12);
+        LocalDate today = LocalDate.now();
         LocalDate yesteray = today.minusDays(1);
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -89,8 +89,11 @@ public class Util {
         	LocalDate startDate = LocalDate.parse(model.getStartDate());
         	LocalDate dueDate = LocalDate.parse(model.getDueDate());
 
+//        	System.out.println(yesteray.toString());
+//        	System.out.println(model.getTitle() + "," + model.getStartDate() + ", " + model.getDueDate() );
+
         	//期間内の場合、返却値に設定してループを抜ける
-            if (yesteray.compareTo(startDate) > 0 && yesteray.compareTo(dueDate) < 0) {
+            if (yesteray.compareTo(startDate) >= 0 && yesteray.compareTo(dueDate) <= 0) {
 
             	milestoneStr = model.getTitle();
             	break;
@@ -139,7 +142,7 @@ public class Util {
 	        	list.get(0).setAllIssueCount(list.get(0).getAllIssueCount() +1);
 
 	        	//完了済みの時
-	            if(model.getState() == "closed" || model.getLabels().contains("Done")) {
+	            if(model.getState().equals("closed") || model.getLabels().contains("Done")) {
 	            	list.get(0).setCompIssueCount(list.get(0).getCompIssueCount() +1);
 	            }
 
@@ -155,7 +158,7 @@ public class Util {
 	            		list.get(index).setAllIssueCount(list.get(index).getAllIssueCount() +1);
 
 	                    //完了済みの時
-	                    if(model.getState() == "closed" || model.getLabels().contains("Done")) {
+	    	            if(model.getState().equals("closed") || model.getLabels().contains("Done")) {
 	                    	list.get(index).setCompIssueCount(list.get(index).getCompIssueCount() +1);
 	                    }
 
@@ -168,7 +171,7 @@ public class Util {
 	                    dto.setAllIssueCount(1);
 
 	                    //完了済みの時
-	                    if(model.getState() == "closed" || model.getLabels().contains("Done")) {
+	    	            if(model.getState().equals("closed") || model.getLabels().contains("Done")) {
 	                    	dto.setCompIssueCount(1);
 	                    }
 
@@ -199,5 +202,21 @@ public class Util {
 		}
 		return ret;
 	}
+//
+//	public String jsonToTemplate(String json) throws JsonMappingException, JsonProcessingException, UnsupportedEncodingException {
+//		// TODO 自動生成されたメソッド・スタブ
+//
+//		ObjectMapper mapper = new ObjectMapper();
+//		TemplateModel model = mapper.readValue(json, TemplateModel.class);
+//
+//		String content = model.getContent();
+//		System.out.println(content);
+//
+//		return content;
+//
+////		String decodedResult = URLDecoder.decode(content, "UTF-8");
+////		System.out.println(decodedResult);
+////		return decodedResult;
+//	}
 
 }

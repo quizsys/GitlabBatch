@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -9,14 +10,18 @@ import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,6 +55,7 @@ public class GitlabSendRequest {
     	String openAndCloseStr = sendGetRequest(strGetUrl);
 
 		LocalDate today = LocalDate.now();
+		LocalDate yesterday = today.minusDays(1); //翌日午前午前1時の実行なので、前日日付を取得する
 		Util util = new Util();
 
     	int todo = util.returnOpenedFromStr(todoStr);
@@ -69,7 +75,7 @@ public class GitlabSendRequest {
 			", opened:" + opened
 		);
 
-		return new SummaryDto(today, opened, todo, doing, done, closed);
+		return new SummaryDto(yesterday, opened, todo, doing, done, closed);
 	}
 
 
@@ -88,7 +94,7 @@ public class GitlabSendRequest {
 
 		//マイルストーンの取得処理
 		String milestoneJson = sendGetRequest(strGetMilestoneUrl);
-//		String milestone = "sprint0000";
+//		String milestone = "sprint0014";
 		String milestone = util.jsonToMilestoneDate(milestoneJson);
 		LOGGER.info("マイルストーン： " + milestone);
 
@@ -116,6 +122,58 @@ public class GitlabSendRequest {
 
 		return util.jsonToDto(jsonList, milestone);
 	}
+
+
+	/**
+	 * ISSUE作成のリクエストを送信
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean sendCreateIssueRequest(int projectId, String templateFileName, String issueTitle, String labels) throws Exception {
+
+//		int projectId = 9;
+//		String templateFileName = "grobal.md";
+//		String issueTitle = "ISSUE作成テスト";
+//		String labels = "Doing,To Do,Done";
+
+		String templatePath = ".gitlab/issue_templates/" + templateFileName;
+		String templatePathEncord = URLEncoder.encode(templatePath, "UTF-8");
+
+		String strGetTemplateUrl = GIT_URL + "/projects/" + projectId + "/repository/files/" + templatePathEncord + "/raw"
+				+ "?private_token=" + TOKEN + "&ref=master";
+
+
+//		System.out.println(strGetTemplateUrl);
+
+		// テンプレート取得リクエストを送信
+		String templateContent = sendGetRequest(strGetTemplateUrl);
+//		System.out.println(templateContent);
+
+		// テンプレートの取得に失敗した場合、処理終了
+		if(templateContent.equals("")) {
+			LOGGER.warn("テンプレートの取得に失敗しました。プロジェクトID: " + projectId + ", 取得ファイル名：" + templateFileName);
+			return false;
+		}
+
+		// ISSUE作成のPOSTリクエスト
+		String strPostIssueUrl = GIT_URL + "/projects/" + projectId + "/issues";
+
+		// リクエストを作成
+		ArrayList<NameValuePair> nvps = new ArrayList<NameValuePair>();
+		nvps.add(new BasicNameValuePair("private_token", TOKEN));
+		nvps.add(new BasicNameValuePair("title", issueTitle));
+		nvps.add(new BasicNameValuePair("description", templateContent));
+		nvps.add(new BasicNameValuePair("labels", labels));
+
+//		System.out.println("リクエストURL:" + strPostIssueUrl);
+		LOGGER.info("POST送信開始");
+
+		// ISSUE作成のリクエストを送信
+		return sendPostRequest(strPostIssueUrl, nvps);
+	}
+
+
+
 
 	/**
 	 * リクエストを送信する（ボディとヘッダーのうちの一部を返却）
@@ -166,6 +224,29 @@ public class GitlabSendRequest {
 		}
 		return ret;
 	}
+
+
+	/**
+	 * POSTリクエストを送り、正常に作成されたかを返却する。
+	 * @param url
+	 * @param nvps
+	 * @return
+	 * @throws Exception
+	 */
+	private boolean sendPostRequest(String url, ArrayList<NameValuePair> nvps) throws Exception {
+
+		HttpClient httpclient = getHttpClient();
+		HttpPost post = new HttpPost(url);
+        post.setEntity(new UrlEncodedFormEntity(nvps, charset));
+
+
+		HttpResponse res = httpclient.execute(post);
+		int status = res.getStatusLine().getStatusCode();
+		LOGGER.info(res.getStatusLine());
+
+		return status == HttpStatus.SC_CREATED;
+	}
+
 
 
 	/**

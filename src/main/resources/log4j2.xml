@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration status="OFF">
+
+<properties>
+	<property name="name">gitlab-batch</property>
+	<property name="dest">/gitlab-batch/log/</property>
+	<property name="pattern">%d{yyyy-MM-dd HH:mm:ss,SSS} [%-5p] - %m%n
+	</property>
+</properties>
+
   <appenders>
     <Console name="console" target="SYSTEM_OUT">
-      <PatternLayout pattern="%d %-5p [%t] - %m (%C.java:%L)%n"/>
+      <PatternLayout pattern="${pattern}"/>
     </Console>
-  		<RollingFile name="file" fileName="/gitlab-batch/log/gitlab-batch.log"
-			filePattern="/gitlab-batch/log/gitlab-batch.%d{yyyyMMdd}.log">
-			<PatternLayout pattern="%d %-5p [%t] - %m (%C.java:%L)%n"/>
+		<RollingRandomAccessFile name="RollingFile"
+  			fileName="${dest}${name}.log" filePattern="${dest}${name}-%d{yyyyMMdd}.log">
+			<PatternLayout>
+				 <charset>UTF-8</charset>
+				<pattern>${pattern}</pattern>
+			</PatternLayout>
 			<Policies>
 				<TimeBasedTriggeringPolicy />
 			</Policies>
 			<DefaultRolloverStrategy max="10" />
-		</RollingFile>
+		</RollingRandomAccessFile>
   </appenders>
 
   <loggers>
@@ -20,7 +31,7 @@
     </Logger>
     <root level="info">
       <appender-ref ref="console"/>
-      <appender-ref ref="file"/>
+      <appender-ref ref="RollingFile"/>
     </root>
   </loggers>
 </configuration>
