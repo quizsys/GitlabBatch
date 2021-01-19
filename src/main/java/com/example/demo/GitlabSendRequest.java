@@ -129,7 +129,7 @@ public class GitlabSendRequest {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean sendCreateIssueRequest(int projectId, String templateFileName, String issueTitle, String labels) throws Exception {
+	public boolean sendCreateIssueRequest(int projectId, String templateFileName, String issueTitle, String labels, double estimateTime) throws Exception {
 
 //		int projectId = 9;
 //		String templateFileName = "grobal.md";
@@ -166,10 +166,33 @@ public class GitlabSendRequest {
 		nvps.add(new BasicNameValuePair("labels", labels));
 
 //		System.out.println("リクエストURL:" + strPostIssueUrl);
-		LOGGER.info("POST送信開始");
+		LOGGER.info("POST送信開始（ISSUE作成）");
 
 		// ISSUE作成のリクエストを送信
-		return sendPostRequest(strPostIssueUrl, nvps);
+		String resJson = sendPostRequest(strPostIssueUrl, nvps);
+
+		Util util = new Util();
+
+		// 登録したissueのiidを取得
+		int iid = util.jsonToIssueIid(resJson);
+
+		// estimateの時間を設定しない場合、処理終了
+		if(estimateTime == 0) {
+			LOGGER.info("estimateの時間設定はありませんでした");
+			return true;
+		}
+
+		// estimate設定用のPOSTリクエスト
+		String strPostIssueEstimateUrl = GIT_URL + "/projects/" + projectId + "/issues/" + iid + "/time_estimate?duration=" + estimateTime + "h";
+//		System.out.println("リクエストURL:" + strPostIssueEstimateUrl);
+
+
+		LOGGER.info("POST送信開始（estimate設定）");
+
+		// estimate設定のリクエストを送信
+		return sendPostRequestSuccessFlg(strPostIssueEstimateUrl, nvps);
+
+
 	}
 
 
@@ -227,13 +250,38 @@ public class GitlabSendRequest {
 
 
 	/**
+	 * POSTリクエストを送り、レスポンスの文字列を返す
+	 * @param url
+	 * @param nvps
+	 * @return
+	 * @throws Exception
+	 */
+	private String sendPostRequest(String url, ArrayList<NameValuePair> nvps) throws Exception {
+
+		String ret = "";
+		HttpClient httpclient = getHttpClient();
+		HttpPost post = new HttpPost(url);
+        post.setEntity(new UrlEncodedFormEntity(nvps, charset));
+
+		HttpResponse res = httpclient.execute(post);
+		int status = res.getStatusLine().getStatusCode();
+		LOGGER.info(res.getStatusLine());
+
+		if (status == HttpStatus.SC_CREATED){
+			ret =EntityUtils.toString(res.getEntity(),charset);
+		}
+		return ret;
+	}
+
+
+	/**
 	 * POSTリクエストを送り、正常に作成されたかを返却する。
 	 * @param url
 	 * @param nvps
 	 * @return
 	 * @throws Exception
 	 */
-	private boolean sendPostRequest(String url, ArrayList<NameValuePair> nvps) throws Exception {
+	private boolean sendPostRequestSuccessFlg(String url, ArrayList<NameValuePair> nvps) throws Exception {
 
 		HttpClient httpclient = getHttpClient();
 		HttpPost post = new HttpPost(url);
@@ -244,7 +292,7 @@ public class GitlabSendRequest {
 		int status = res.getStatusLine().getStatusCode();
 		LOGGER.info(res.getStatusLine());
 
-		return status == HttpStatus.SC_CREATED;
+		return status == HttpStatus.SC_OK;
 	}
 
 

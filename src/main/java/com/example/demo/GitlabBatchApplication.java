@@ -101,7 +101,7 @@ public class GitlabBatchApplication implements CommandLineRunner {
 			LOGGER.info("ISSUE作成、タイトル： " + issueTitle);
 
 			// ISSUE作成リクエストを送信
-			boolean successFlg = gitlabSendRequest.sendCreateIssueRequest(dto.getProjectId(), dto.getTemplateName(), issueTitle, dto.getLabels());
+			boolean successFlg = gitlabSendRequest.sendCreateIssueRequest(dto.getProjectId(), dto.getTemplateName(), issueTitle, dto.getLabels(), dto.getEstimateTime());
 
 			// 実行結果を記録
 			dto.setBeforeCreateDate(today);

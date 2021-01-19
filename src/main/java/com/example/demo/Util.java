@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -202,21 +203,15 @@ public class Util {
 		}
 		return ret;
 	}
-//
-//	public String jsonToTemplate(String json) throws JsonMappingException, JsonProcessingException, UnsupportedEncodingException {
-//		// TODO 自動生成されたメソッド・スタブ
-//
-//		ObjectMapper mapper = new ObjectMapper();
-//		TemplateModel model = mapper.readValue(json, TemplateModel.class);
-//
-//		String content = model.getContent();
-//		System.out.println(content);
-//
-//		return content;
-//
-////		String decodedResult = URLDecoder.decode(content, "UTF-8");
-////		System.out.println(decodedResult);
-////		return decodedResult;
-//	}
+
+	public int jsonToIssueIid(String json) throws JsonMappingException, JsonProcessingException, UnsupportedEncodingException {
+		// TODO 自動生成されたメソッド・スタブ
+
+		ObjectMapper mapper = new ObjectMapper();
+		IssueModel model = mapper.readValue(json, IssueModel.class);
+
+		return model.getIid();
+
+	}
 
 }
