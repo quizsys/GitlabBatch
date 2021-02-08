@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.burnDown;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;

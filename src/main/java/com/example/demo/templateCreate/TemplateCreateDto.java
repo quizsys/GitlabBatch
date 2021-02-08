@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.templateCreate;
 
 import java.time.LocalDate;
 
@@ -37,6 +37,8 @@ public class TemplateCreateDto {
 	private LocalDate beforeCreateDate;
 
 	private boolean beforeSuccessFlg;
+
+	private double estimateTime;
 
 	public int getId() {
 		return id;
@@ -132,6 +134,14 @@ public class TemplateCreateDto {
 
 	public void setBeforeSuccessFlg(boolean beforeSuccessFlg) {
 		this.beforeSuccessFlg = beforeSuccessFlg;
+	}
+
+	public double getEstimateTime() {
+		return estimateTime;
+	}
+
+	public void setEstimateTime(double estimateTime) {
+		this.estimateTime = estimateTime;
 	}
 
 

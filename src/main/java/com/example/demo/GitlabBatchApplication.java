@@ -11,6 +11,16 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.example.demo.burnDown.BurnDownDao;
+import com.example.demo.burnDown.BurnDownDto;
+import com.example.demo.summary.SummaryDao;
+import com.example.demo.summary.SummaryDto;
+import com.example.demo.templateCreate.CalenderUtil;
+import com.example.demo.templateCreate.HolidayDao;
+import com.example.demo.templateCreate.HolidayDto;
+import com.example.demo.templateCreate.TemplateCreateDao;
+import com.example.demo.templateCreate.TemplateCreateDto;
+
 @SpringBootApplication
 public class GitlabBatchApplication implements CommandLineRunner {
 
@@ -42,9 +52,9 @@ public class GitlabBatchApplication implements CommandLineRunner {
 		LOGGER.info("==================================================");
 		LOGGER.info("START: バッチ処理を開始します");
 
-		LOGGER.info("START: ISSUEの統計情報の取得");
-
     	GitlabSendRequest gitlabSendRequest = new GitlabSendRequest();
+
+		LOGGER.info("START: ISSUEの統計情報の取得");
 
     	SummaryDto summaryDto = gitlabSendRequest.getIssueStatistics();
     	SummaryDto retSave = summaryDao.save(summaryDto);
@@ -64,9 +74,6 @@ public class GitlabBatchApplication implements CommandLineRunner {
 		}
 
 		LOGGER.info("END: バーンダウン情報の取得");
-
-
-
 
 		LOGGER.info("START: ISSUEのスケジュール作成開始");
 
@@ -88,11 +95,18 @@ public class GitlabBatchApplication implements CommandLineRunner {
 
 			LOGGER.info("ISSUE作成、テンプレート： " + dto.getTemplateName());
 
-			// ISSUEの実施日を計算
-			LocalDate issueDate = calenderUtil.getIssueDate(today, dto.getIssueDate(), dto.getIssueDateDetail());
+			// ISSUEのタイトルを設定（デフォルト）
+			String issueTitle = dto.getIssueTitle();
 
-			// ISSUEのタイトルを作成
-			String issueTitle = calenderUtil.convertIssueTitle(dto.getIssueTitle(), issueDate);
+			// 指定なし以外の場合
+			if(dto.getIssueDate() != 0){
+
+				// ISSUEの実施日を計算
+				LocalDate issueDate = calenderUtil.getIssueDate(today, dto.getIssueDate(), dto.getIssueDateDetail());
+
+				// ISSUEのタイトルを作成
+				issueTitle = calenderUtil.convertIssueTitle(dto.getIssueTitle(), issueDate);
+			}
 
 			// 次回実施日を計算
 			LocalDate nextDate = calenderUtil.getNextCreateDate(today, dto.getCreateTerms(), dto.getCreateTermsDetail());

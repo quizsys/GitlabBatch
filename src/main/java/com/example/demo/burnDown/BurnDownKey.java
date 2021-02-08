@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.burnDown;
 
 import java.io.Serializable;
 import java.time.LocalDate;

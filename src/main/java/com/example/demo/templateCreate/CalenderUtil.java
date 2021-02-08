@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.templateCreate;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -191,13 +191,13 @@ public class CalenderUtil {
 	 */
 	public String convertIssueTitle(String issueTitle, LocalDate issueDate) {
 
-		String YYYY = Integer.toString(issueDate.getYear());
-		String MM   = Integer.toString(issueDate.getMonthValue());
-		String DD   = Integer.toString(issueDate.getDayOfMonth());
-		String UU   = Integer.toString((int)Math.ceil(issueDate.getDayOfMonth() / 7));
+		String YYYY = String.format("%04d", issueDate.getYear());
+		String MM   = String.format("%02d", issueDate.getMonthValue());
+		String DD   = String.format("%02d", issueDate.getDayOfMonth());
+		String UU   = Integer.toString((int)Math.floor((issueDate.getDayOfMonth() - issueDate.getDayOfWeek().getValue()) / 7) + 1);
 
 
-		return issueTitle.replace("YYYY", YYYY).replace("MM", MM).replace("DD", DD).replace("UU", UU);
+		return issueTitle.replace("YYYY", YYYY).replace("MM", MM).replace("DD", DD).replace("[U]", UU);
 
 	}
 

@@ -26,6 +26,9 @@ import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.example.demo.burnDown.BurnDownDto;
+import com.example.demo.summary.SummaryDto;
+
 public class GitlabSendRequest {
 
 	private static final Logger LOGGER = LogManager.getLogger(GitlabBatchApplication.class);
@@ -94,7 +97,6 @@ public class GitlabSendRequest {
 
 		//マイルストーンの取得処理
 		String milestoneJson = sendGetRequest(strGetMilestoneUrl);
-//		String milestone = "sprint0014";
 		String milestone = util.jsonToMilestoneDate(milestoneJson);
 		LOGGER.info("マイルストーン： " + milestone);
 
@@ -130,11 +132,6 @@ public class GitlabSendRequest {
 	 * @throws Exception
 	 */
 	public boolean sendCreateIssueRequest(int projectId, String templateFileName, String issueTitle, String labels, double estimateTime) throws Exception {
-
-//		int projectId = 9;
-//		String templateFileName = "grobal.md";
-//		String issueTitle = "ISSUE作成テスト";
-//		String labels = "Doing,To Do,Done";
 
 		String templatePath = ".gitlab/issue_templates/" + templateFileName;
 		String templatePathEncord = URLEncoder.encode(templatePath, "UTF-8");
