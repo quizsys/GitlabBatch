@@ -146,6 +146,7 @@ public class Util {
 	        	//完了済みの時
 	            if(model.getState().equals("closed") || model.getLabels().contains("Done")) {
 	            	list.get(0).setCompIssueCount(list.get(0).getCompIssueCount() +1);
+	            	list.get(0).setCompTimeEstimate(list.get(0).getCompTimeEstimate() + timeEstimate); //追加
 	            }
 
 	            //ラベルごとに回す
@@ -162,6 +163,7 @@ public class Util {
 	                    //完了済みの時
 	    	            if(model.getState().equals("closed") || model.getLabels().contains("Done")) {
 	                    	list.get(index).setCompIssueCount(list.get(index).getCompIssueCount() +1);
+	    	            	list.get(index).setCompTimeEstimate(list.get(index).getCompTimeEstimate() + timeEstimate); //追加
 	                    }
 
 	            	} else {
@@ -175,6 +177,7 @@ public class Util {
 	                    //完了済みの時
 	    	            if(model.getState().equals("closed") || model.getLabels().contains("Done")) {
 	                    	dto.setCompIssueCount(1);
+	                    	dto.setCompTimeEstimate(timeEstimate); //追加
 	                    }
 
 	                    list.add(dto);

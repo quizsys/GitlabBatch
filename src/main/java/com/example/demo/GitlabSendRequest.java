@@ -2,7 +2,6 @@ package com.example.demo;
 
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -33,14 +32,15 @@ public class GitlabSendRequest {
 
 	private static final Logger LOGGER = LogManager.getLogger(GitlabBatchApplication.class);
 
-	public static String HOST = "proxy.hoge.jp";
-	public static int PORT = 0000;
-	public static String USER = "xxxxx";
-	public static String PASSWORD = "xxxxx";
-	private final Charset charset = StandardCharsets.UTF_8;
-	private final String GIT_URL = "https://x.x.x.x/api/v4";
-	private final String TOKEN = "xxxx";
-	private final String GROUP_ID = "4";
+	private String HOST = GrobalConfig.HOST;
+	private int PORT = GrobalConfig.PORT;
+	private String USER = GrobalConfig.USER;
+	private String PASSWORD = GrobalConfig.PASSWORD;
+	private Charset charset = GrobalConfig.charset;
+	private String GIT_URL = GrobalConfig.GIT_URL;
+	private String TOKEN = GrobalConfig.TOKEN;
+	private String GROUP_ID = GrobalConfig.GROUP_ID;
+	private boolean PROXY_FLG = GrobalConfig.PROXY_FLG;
 	private final int LOOP_COUNT = 10; //ループ回数、無限ループしないように上限を設定
 
 
@@ -306,9 +306,14 @@ public class GitlabSendRequest {
 		credsProvider.setCredentials(
 				new AuthScope(proxy),
 				new UsernamePasswordCredentials(USER, PASSWORD));
-		RequestConfig config = RequestConfig.custom()
-//				.setProxy(proxy)                   //プロキシ使う場合はコメント外す
-				.build();
+		RequestConfig config = null;
+
+		if(PROXY_FLG) {
+			//プロキシ使う場合
+			config = RequestConfig.custom().setProxy(proxy).build();
+		} else {
+			config = RequestConfig.custom().build();
+		}
 		HttpClient httpclient = HttpClients.custom()
 				.setDefaultCredentialsProvider(credsProvider)
 				.setDefaultRequestConfig(config)

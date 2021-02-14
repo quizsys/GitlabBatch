@@ -32,6 +32,8 @@ public class BurnDownDto {
 
 	private int totalTimeSpentMergeRequest;
 
+	private int compTimeEstimate;
+
 
 	public BurnDownDto() {}
 
@@ -46,28 +48,15 @@ public class BurnDownDto {
 		this.totalTimeSpent = 0;
 		this.timeEstimate = 0;
 		this.totalTimeSpentMergeRequest = 0;
+		this.compTimeEstimate = 0;
 	}
-
-	public BurnDownDto(String milestone, LocalDate date, String label, int allIssueCount, int compIssueCount,
-			int totalTimeSpent, int timeEstimate, int totalTimeSpentMergeRequest) {
-		this.milestone = milestone;
-		this.date = date;
-		this.label = label;
-		this.allIssueCount = allIssueCount;
-		this.compIssueCount = compIssueCount;
-		this.totalTimeSpent = totalTimeSpent;
-		this.timeEstimate = timeEstimate;
-		this.totalTimeSpentMergeRequest = totalTimeSpentMergeRequest;
-	}
-
-
-
 
 	@Override
 	public String toString() {
 		return "BurnDownDto [milestone=" + milestone + ", date=" + date + ", label=" + label + ", allIssueCount="
 				+ allIssueCount + ", compIssueCount=" + compIssueCount + ", totalTimeSpent=" + totalTimeSpent
-				+ ", timeEstimate=" + timeEstimate + ", totalTimeSpentMergeRequest=" + totalTimeSpentMergeRequest + "]";
+				+ ", timeEstimate=" + timeEstimate + ", totalTimeSpentMergeRequest=" + totalTimeSpentMergeRequest
+				+ ", compTimeEstimate=" + compTimeEstimate + "]";
 	}
 
 
@@ -148,6 +137,16 @@ public class BurnDownDto {
 
 	public void setTotalTimeSpentMergeRequest(int totalTimeSpentMergeRequest) {
 		this.totalTimeSpentMergeRequest = totalTimeSpentMergeRequest;
+	}
+
+
+	public int getCompTimeEstimate() {
+		return compTimeEstimate;
+	}
+
+
+	public void setCompTimeEstimate(int compTimeEstimate) {
+		this.compTimeEstimate = compTimeEstimate;
 	}
 
 
