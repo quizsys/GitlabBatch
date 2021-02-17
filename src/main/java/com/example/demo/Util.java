@@ -137,6 +137,7 @@ public class Util {
 	            //時間を取得
 	        	int totalTimeSpent = model.getTimeStats().getTotalTimeSpent();
 	        	int timeEstimate = model.getTimeStats().getTimeEstimate();
+	        	int uncompTimeSpent = 0;
 
 	        	//合計値に加算
 	        	list.get(0).setTimeEstimate(list.get(0).getTimeEstimate() + timeEstimate);
@@ -147,6 +148,19 @@ public class Util {
 	            if(model.getState().equals("closed") || model.getLabels().contains("Done")) {
 	            	list.get(0).setCompIssueCount(list.get(0).getCompIssueCount() +1);
 	            	list.get(0).setCompTimeEstimate(list.get(0).getCompTimeEstimate() + timeEstimate); //追加
+
+            	//未完了の場合
+	            } else {
+
+	            	// 実績が見積時間の9割を超過する場合は、9割に計算
+	            	if(totalTimeSpent >  (int)Math.round(timeEstimate * 0.9)) {
+	            		uncompTimeSpent = (int)Math.round(timeEstimate * 0.9);
+	            	} else {
+		            	uncompTimeSpent = totalTimeSpent;
+	            	}
+	            	//合計値に加算
+	            	list.get(0).setUncompTimeSpent(list.get(0).getUncompTimeSpent() + uncompTimeSpent); //追加
+
 	            }
 
 	            //ラベルごとに回す
@@ -164,6 +178,10 @@ public class Util {
 	    	            if(model.getState().equals("closed") || model.getLabels().contains("Done")) {
 	                    	list.get(index).setCompIssueCount(list.get(index).getCompIssueCount() +1);
 	    	            	list.get(index).setCompTimeEstimate(list.get(index).getCompTimeEstimate() + timeEstimate); //追加
+
+    	            	//未完了の場合
+	    	            } else {
+	    	            	list.get(index).setUncompTimeSpent(list.get(index).getUncompTimeSpent() + uncompTimeSpent);
 	                    }
 
 	            	} else {
@@ -178,8 +196,10 @@ public class Util {
 	    	            if(model.getState().equals("closed") || model.getLabels().contains("Done")) {
 	                    	dto.setCompIssueCount(1);
 	                    	dto.setCompTimeEstimate(timeEstimate); //追加
+    	            	//未完了の場合
+	    	            } else {
+	                    	dto.setUncompTimeSpent(uncompTimeSpent);
 	                    }
-
 	                    list.add(dto);
 	            	}
 	            }

@@ -34,6 +34,7 @@ public class BurnDownDto {
 
 	private int compTimeEstimate;
 
+	private int uncompTimeSpent;
 
 	public BurnDownDto() {}
 
@@ -49,6 +50,7 @@ public class BurnDownDto {
 		this.timeEstimate = 0;
 		this.totalTimeSpentMergeRequest = 0;
 		this.compTimeEstimate = 0;
+		this.uncompTimeSpent = 0;
 	}
 
 	@Override
@@ -56,7 +58,7 @@ public class BurnDownDto {
 		return "BurnDownDto [milestone=" + milestone + ", date=" + date + ", label=" + label + ", allIssueCount="
 				+ allIssueCount + ", compIssueCount=" + compIssueCount + ", totalTimeSpent=" + totalTimeSpent
 				+ ", timeEstimate=" + timeEstimate + ", totalTimeSpentMergeRequest=" + totalTimeSpentMergeRequest
-				+ ", compTimeEstimate=" + compTimeEstimate + "]";
+				+ ", compTimeEstimate=" + compTimeEstimate + ", uncompTimeSpent=" + uncompTimeSpent + "]";
 	}
 
 
@@ -147,6 +149,16 @@ public class BurnDownDto {
 
 	public void setCompTimeEstimate(int compTimeEstimate) {
 		this.compTimeEstimate = compTimeEstimate;
+	}
+
+
+	public int getUncompTimeSpent() {
+		return uncompTimeSpent;
+	}
+
+
+	public void setUncompTimeSpent(int uncompTimeSpent) {
+		this.uncompTimeSpent = uncompTimeSpent;
 	}
 
 
